@@ -1,75 +1,89 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 16px;
-    width: 450px; /* Increased width for more space */
-    height: 100%; /* Full height for the side drawer */
-    overflow-y: auto; /* Allow scrolling */
-    background-color: #fff; /* Background color */
-  }
-  
-  #domain-search {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-  }
-  
-  #domain-filter {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 20px;
-    box-sizing: border-box;
-  }
-  
-  .domain-group {
-    margin-bottom: 20px;
-  }
-  
-  .domain-title {
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .tab {
-    padding: 5px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .tab-actions {
-    display: flex;
-    gap: 10px;
-    min-width: 130px; /* Increased to accommodate "Unpin" text */
-    justify-content: space-between;
-  }
-  
-  .tab:hover {
+    padding: 10px;
     background-color: #f0f0f0;
-  }
-  
-  .close-tab, .pin-tab {
+}
+
+input[type="text"],
+select {
+    padding: 8px;
+    margin-bottom: 10px;
+    width: calc(100% - 20px);
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#tabs-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+.domain-group {
+    margin-bottom: 10px;
+}
+
+.domain-title {
+    font-weight: bold;
+    padding: 5px 10px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.tab-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between buttons */
+}
+
+.tab-actions button {
     background: none;
     border: none;
-    font-size: 14px;
     cursor: pointer;
-    padding: 0;
-  }
-  
-  .close-tab {
-    color: #ff4d4d;
-  }
-  
-  .close-tab:hover {
-    color: #ff0000;
-  }
-  
-  .pin-tab {
-    color: #007bff;
-  }
-  
-  .pin-tab:hover {
-    color: #0056b3;
-  }
-  
+    padding: 5px;
+    position: relative; /* To position the tooltip */
+}
+
+.tab-actions button:hover {
+    opacity: 0.7; /* Change opacity on hover */
+}
+
+.tab-actions button::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%; /* Position above the button */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+    white-space: nowrap;
+    display: none; /* Initially hide the tooltip */
+}
+
+.tab-actions button:hover::after {
+    display: block; /* Show tooltip on hover */
+}
+
+/* Additional spacing for icons and tab title */
+.tab span {
+    margin-right: 10px; /* Space between tab title and pin icon */
+}
+
+.pin-tab img,
+.bookmark-tab img,
+.close-tab img {
+    height: 20px; /* Uniform height for icons */
+}
