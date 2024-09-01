@@ -8,6 +8,20 @@ body {
     background-color: #fff; /* Background color */
   }
   
+  #domain-search {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+  }
+  
+  #domain-filter {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+  }
+  
   .domain-group {
     margin-bottom: 20px;
   }

@@ -1,5 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('tabs-container');
+    const domainSearch = document.getElementById('domain-search');
+    const domainFilter = document.getElementById('domain-filter');
+  
+    let allTabs = {};
+    let filteredTabs = {};
   
     // Function to group tabs by domain
     function groupTabsByDomain(tabs) {
@@ -58,10 +63,49 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   
-    // Load all tabs and display them grouped by domain
+    // Function to filter domains based on search and dropdown
+    function filterDomains() {
+      const searchText = domainSearch.value.toLowerCase();
+      const selectedDomain = domainFilter.value;
+  
+      filteredTabs = {};
+  
+      for (const domain in allTabs) {
+        if (
+          (!selectedDomain || domain === selectedDomain) &&
+          domain.toLowerCase().includes(searchText)
+        ) {
+          filteredTabs[domain] = allTabs[domain];
+        }
+      }
+  
+      displayGroupedTabs(filteredTabs);
+    }
+  
+    // Load all tabs and initialize the filter options
     chrome.tabs.query({}, (tabs) => {
-      const groupedTabs = groupTabsByDomain(tabs);
-      displayGroupedTabs(groupedTabs);
+      allTabs = groupTabsByDomain(tabs);
+      filteredTabs = { ...allTabs };
+  
+      // Populate the domain filter dropdown
+      const domains = Object.keys(allTabs);
+      domains.forEach((domain) => {
+        const option = document.createElement('option');
+        option.value = domain;
+        option.innerText = domain;
+        domainFilter.appendChild(option);
+      });
+  
+      displayGroupedTabs(filteredTabs);
     });
+  
+    // Reset dropdown to "All Domains" when typing in the search bar
+    domainSearch.addEventListener('input', () => {
+      domainFilter.value = ""; // Reset the dropdown to "All Domains"
+      filterDomains();
+    });
+  
+    // Attach event listeners
+    domainFilter.addEventListener('change', filterDomains);
   });
   
