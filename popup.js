@@ -47,6 +47,20 @@ document.addEventListener('DOMContentLoaded', () => {
           };
           tabDiv.appendChild(tabTitle);
   
+          const actionsDiv = document.createElement('div');
+          actionsDiv.className = 'tab-actions';
+  
+          const pinButton = document.createElement('button');
+          pinButton.innerText = tab.pinned ? 'Unpin' : 'Pin';
+          pinButton.className = 'pin-tab';
+          pinButton.onclick = () => {
+            chrome.tabs.update(tab.id, { pinned: !tab.pinned }, () => {
+              tab.pinned = !tab.pinned;
+              pinButton.innerText = tab.pinned ? 'Unpin' : 'Pin';
+            });
+          };
+          actionsDiv.appendChild(pinButton);
+  
           const closeButton = document.createElement('button');
           closeButton.innerText = 'close';
           closeButton.className = 'close-tab';
@@ -54,8 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
             chrome.tabs.remove(tab.id);
             tabDiv.remove(); // Remove the tab from the UI
           };
-          tabDiv.appendChild(closeButton);
+          actionsDiv.appendChild(closeButton);
   
+          tabDiv.appendChild(actionsDiv);
           domainDiv.appendChild(tabDiv);
         });
   
