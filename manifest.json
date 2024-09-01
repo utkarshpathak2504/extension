@@ -2,18 +2,22 @@
     "manifest_version": 3,
     "name": "Tab Manager",
     "version": "1.0",
-    "description": "Group and manage open tabs by domain, with memory usage display.",
-    "permissions": ["tabs", "storage", "system.memory"],
+    "permissions": ["tabs", "storage"],
     "background": {
       "service_worker": "background.js"
     },
     "action": {
-      "default_popup": "popup.html",
       "default_icon": {
         "16": "icon.png",
         "48": "icon.png",
         "128": "icon.png"
-      }
+      },
+      "default_popup": "popup.html"
+    },
+    "popup_action": {
+      "default_title": "Open Tab Manager",
+      "default_icon": "icon.png",
+      "default_popup": "popup.html"
     }
   }
   

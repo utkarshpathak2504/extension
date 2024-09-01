@@ -1,28 +1,43 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 10px;
-  }
-  
-  .tab-group {
-    margin-bottom: 15px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-  }
-  
-  .tab-group h3 {
     margin: 0;
-    font-size: 16px;
-    color: #333;
+    padding: 10px;
+    width: 300px; /* Width for the side drawer */
+    height: 100vh; /* Full height for the side drawer */
+    overflow-y: auto; /* Allow scrolling */
+    background-color: #fff; /* Background color */
+  }
+  
+  .domain-group {
+    margin-bottom: 20px;
+  }
+  
+  .domain-title {
+    font-weight: bold;
+    margin-bottom: 10px;
   }
   
   .tab {
     padding: 5px;
     cursor: pointer;
-    color: #007bff;
-    text-decoration: underline;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   
   .tab:hover {
     background-color: #f0f0f0;
+  }
+  
+  .close-tab {
+    background: none;
+    border: none;
+    color: #ff4d4d;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .close-tab:hover {
+    color: #ff0000;
   }
   
