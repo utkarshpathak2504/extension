@@ -3,15 +3,18 @@ body {
     margin: 0;
     padding: 10px;
     background-color: #f0f0f0;
+    box-sizing: border-box;
+    width: 450px; /* Increased width to prevent horizontal scrolling */
 }
 
 input[type="text"],
 select {
     padding: 8px;
     margin-bottom: 10px;
-    width: calc(100% - 20px);
+    width: 100%; /* Full width input fields */
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-sizing: border-box; /* Include padding and border in width */
 }
 
 #tabs-container {
@@ -20,10 +23,15 @@ select {
     border: 1px solid #ddd;
     border-radius: 4px;
     background-color: #fff;
+    box-sizing: border-box;
+    width: 100%; /* Ensure container takes full width */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .domain-group {
     margin-bottom: 10px;
+    width: 100%; /* Full width of container */
+    overflow: hidden; /* Prevent horizontal overflow */
 }
 
 .domain-title {
@@ -31,6 +39,10 @@ select {
     padding: 5px 10px;
     background-color: #e0e0e0;
     border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Full width of container */
 }
 
 .tab {
@@ -39,12 +51,15 @@ select {
     justify-content: space-between;
     padding: 8px 10px;
     border-bottom: 1px solid #eee;
+    width: 100%; /* Full width of container */
+    box-sizing: border-box;
 }
 
 .tab-actions {
     display: flex;
     align-items: center;
-    gap: 10px; /* Space between buttons */
+    gap: 10px;
+    flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 .tab-actions button {
@@ -53,10 +68,11 @@ select {
     cursor: pointer;
     padding: 5px;
     position: relative; /* To position the tooltip */
+    flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 .tab-actions button:hover {
-    opacity: 0.7; /* Change opacity on hover */
+    opacity: 0.7;
 }
 
 .tab-actions button::after {
@@ -71,19 +87,24 @@ select {
     border-radius: 4px;
     white-space: nowrap;
     display: none; /* Initially hide the tooltip */
+    z-index: 1;
 }
 
 .tab-actions button:hover::after {
     display: block; /* Show tooltip on hover */
 }
 
-/* Additional spacing for icons and tab title */
 .tab span {
-    margin-right: 10px; /* Space between tab title and pin icon */
+    margin-right: 10px;
+    overflow: hidden; /* Prevent text overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
+    white-space: nowrap; /* Prevent text from wrapping */
+    flex-grow: 1; /* Allow the span to take up remaining space */
 }
 
 .pin-tab img,
 .bookmark-tab img,
 .close-tab img {
-    height: 20px; /* Uniform height for icons */
+    height: 20px;
+    width: 20px;
 }

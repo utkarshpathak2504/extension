@@ -33,7 +33,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const domainTitle = document.createElement('div');
             domainTitle.className = 'domain-title';
-            domainTitle.innerText = domain;
+
+            // Calculate tab count and rough memory usage
+            const tabCount = groups[domain].length;
+            const memoryUsage = (tabCount * 10).toFixed(2); // Rough estimate (10MB per tab)
+
+            domainTitle.innerText = `${domain} (Tabs: ${tabCount}, Memory: ${memoryUsage} MB)`;
             domainDiv.appendChild(domainTitle);
 
             groups[domain].forEach((tab) => {
@@ -103,7 +108,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 actionsDiv.appendChild(pinButton);
                 
-
                 // Bookmark Button with Tooltip
                 const bookmarkButton = document.createElement('button');
                 bookmarkButton.innerHTML = `<img src="./star.png" alt="Bookmark" height="20px" />`;
@@ -121,11 +125,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Close Button
                 const closeButton = document.createElement('button');
                 closeButton.innerHTML = `<img src="./cross.png" alt="Close" height="20px" />`;
-                closeButton.title='close';
+                closeButton.title = 'Close';
                 closeButton.className = 'close-tab';
                 closeButton.onclick = () => {
-                    chrome.tabs.remove(tab.id);
-                    tabDiv.remove(); // Remove the tab from the UI
+                    chrome.tabs.remove(tab.id, () => {
+                        // Check if the tab was successfully removed
+                        if (chrome.runtime.lastError) {
+                            console.error('Error closing tab:', chrome.runtime.lastError);
+                            return;
+                        }
+                        
+                        // Remove the tab from the current group
+                        groups[domain] = groups[domain].filter(t => t.id !== tab.id);
+                        
+                        // If the domain has no remaining tabs, remove it from the display
+                        if (groups[domain].length === 0) {
+                            delete groups[domain]; // Remove the domain from the groups
+                            domainDiv.remove(); // Remove the domain div from the UI
+                        } else {
+                            // Update the displayed tabs for that domain
+                            displayGroupedTabs(groups);
+                        }
+                    });
                 };
                 actionsDiv.appendChild(closeButton);
 
@@ -170,15 +191,11 @@ document.addEventListener('DOMContentLoaded', () => {
             domainFilter.appendChild(option);
         });
 
+        // Display grouped tabs
         displayGroupedTabs(filteredTabs);
     });
 
-    // Reset dropdown to "All Domains" when typing in the search bar
-    domainSearch.addEventListener('input', () => {
-        domainFilter.value = ""; // Reset the dropdown to "All Domains"
-        filterDomains();
-    });
-
-    // Attach event listeners
+    // Event listeners for search and filter
+    domainSearch.addEventListener('input', filterDomains);
     domainFilter.addEventListener('change', filterDomains);
 });
