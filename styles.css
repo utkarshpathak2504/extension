@@ -46,6 +46,7 @@ select {
 }
 
 .tab {
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -58,6 +59,7 @@ select {
 .tab-actions {
     display: flex;
     align-items: center;
+    cursor: pointer;
     gap: 10px;
     flex-shrink: 0; /* Prevent buttons from shrinking */
 }
@@ -107,4 +109,55 @@ select {
 .close-tab img {
     height: 20px;
     width: 20px;
+}
+.domain-info {
+margin-right: 30px;
+    font-size: 14px; /* Adjust size if needed */
+    color: #666; /* Change color for visibility */
+}
+
+.inactive-tab {
+    color: red;
+    position: relative;
+}
+
+.inactive-tab::after {
+    content: 'Inactive for over 3 days'; /* Tooltip text */
+    position: absolute;
+    bottom: 100%;
+    left: 20px;
+    background: #333;
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+    white-space: nowrap;
+    font-size: 12px;
+    visibility: hidden; /* Initially hidden */
+}
+
+.inactive-tab:hover::after {
+    visibility: visible; /* Show tooltip on hover */
+}
+
+.logoIcon {
+    height: 80px;
+    width: 80px;
+    margin-top: 20px;
+    margin-left: 80px;
+}
+
+
+.logoContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+
+.logoText{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: 20px 0px;
 }

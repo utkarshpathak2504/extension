@@ -1,23 +1,27 @@
+const fiveDaysInMillis = 3 * 24 * 60 * 60 * 1000; // For testing, set to 30 minutes
+let allTabs = {};
+let filteredTabs = {};
+
 document.addEventListener('DOMContentLoaded', () => {
     const container = document.getElementById('tabs-container');
     const domainSearch = document.getElementById('domain-search');
     const domainFilter = document.getElementById('domain-filter');
 
-    let allTabs = {};
-    let filteredTabs = {};
-
     // Function to group tabs by domain
     function groupTabsByDomain(tabs) {
         const groups = {};
-
+        
         tabs.forEach((tab) => {
+            const tabId = tab.id;
             const url = new URL(tab.url);
             const domain = url.hostname;
+            // const memoryUsage = Math.floor(Math.random() * 100); // Mock memory usage
+            const lastActiveTime = tab.lastAccessed // Mock last active time
 
             if (!groups[domain]) {
                 groups[domain] = [];
             }
-            groups[domain].push(tab);
+            groups[domain].push({ ...tab, lastActive: lastActiveTime });
         });
 
         return groups;
@@ -33,17 +37,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const domainTitle = document.createElement('div');
             domainTitle.className = 'domain-title';
+            domainTitle.innerText = domain;
 
-            // Calculate tab count and rough memory usage
+            // Calculate total tabs and memory usage for the domain
             const tabCount = groups[domain].length;
-            const memoryUsage = (tabCount * 10).toFixed(2); // Rough estimate (10MB per tab)
+            // const memoryUsage = (tabCount * 10).toFixed(2); // Rough estimate (10MB per tab)
 
-            domainTitle.innerText = `${domain} (Tabs: ${tabCount}, Memory: ${memoryUsage} MB)`;
+            domainTitle.innerText = `${domain} (Tabs: ${tabCount})`;
             domainDiv.appendChild(domainTitle);
 
             groups[domain].forEach((tab) => {
                 const tabDiv = document.createElement('div');
-                tabDiv.className = 'tab';
+                tabDiv.className = `tab ${Date.now() - tab.lastActive > fiveDaysInMillis ? 'inactive-tab' : ''}`;
+                tabDiv.setAttribute('title', 'Inactive');
+                //  tabDiv.title = 'Inactive for more than 5 days';
 
                 const tabTitle = document.createElement('span');
                 tabTitle.innerText = tab.title;
@@ -107,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 };
                 actionsDiv.appendChild(pinButton);
-                
+
                 // Bookmark Button with Tooltip
                 const bookmarkButton = document.createElement('button');
                 bookmarkButton.innerHTML = `<img src="./star.png" alt="Bookmark" height="20px" />`;
@@ -117,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         title: tab.title,
                         url: tab.url,
                     }, () => {
-                        alert('Tab added to bookmarks!');
+                    alert('Tab added to bookmarks!');
                     });
                 };
                 actionsDiv.appendChild(bookmarkButton);
@@ -145,7 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         } else {
                             // Update the displayed tabs for that domain
                             displayGroupedTabs(groups);
-                        }
+                    }
                     });
                 };
                 actionsDiv.appendChild(closeButton);
@@ -158,7 +165,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Function to filter domains based on search and dropdown
+    // Load all tabs and initialize the filter options
+    chrome.tabs.query({}, (tabs) => {
+        allTabs = groupTabsByDomain(tabs);
+        filteredTabs = { ...allTabs };
+
+        // Populate the domain filter dropdown
+        const domains = Object.keys(allTabs);
+        domains.forEach((domain) => {
+            const option = document.createElement('option');
+            option.value = domain;
+            option.innerText = domain;
+            domainFilter.appendChild(option);
+        });
+
+        displayGroupedTabs(filteredTabs);
+    });
+
+    // Filter domains based on search and dropdown
     function filterDomains() {
         const searchText = domainSearch.value.toLowerCase();
         const selectedDomain = domainFilter.value;
@@ -177,25 +201,11 @@ document.addEventListener('DOMContentLoaded', () => {
         displayGroupedTabs(filteredTabs);
     }
 
-    // Load all tabs and initialize the filter options
-    chrome.tabs.query({}, (tabs) => {
-        allTabs = groupTabsByDomain(tabs);
-        filteredTabs = { ...allTabs };
-
-        // Populate the domain filter dropdown
-        const domains = Object.keys(allTabs);
-        domains.forEach((domain) => {
-            const option = document.createElement('option');
-            option.value = domain;
-            option.innerText = domain;
-            domainFilter.appendChild(option);
-        });
-
-        // Display grouped tabs
-        displayGroupedTabs(filteredTabs);
+    // Attach event listeners
+    domainSearch.addEventListener('input', () => {
+        domainFilter.value = ""; // Reset the dropdown to "All Domains"
+        filterDomains();
     });
 
-    // Event listeners for search and filter
-    domainSearch.addEventListener('input', filterDomains);
     domainFilter.addEventListener('change', filterDomains);
 });
