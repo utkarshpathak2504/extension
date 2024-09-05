@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "QuickTabs",
     "version": "1.0",
-    "permissions": ["tabs", "storage", "bookmarks", "activeTab",  "scripting",
+    "permissions": ["tabs", "storage", "bookmarks", "activeTab",
     "windows"],
     "background": {
       "service_worker": "background.js"
